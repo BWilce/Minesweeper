@@ -3,17 +3,18 @@ package org.example;
 import java.util.*;
 
 public class Board {
-    private int gridLen;
-    private int amountBomb;
+    private final int gridLen;
+    private final int amountBomb;
     private int firY;
     private int firX;
     //private int firstX;
     //private int firstY;
-    private int [][] gridHidden;
-    private boolean [][] mineHidden;
-    private String [][] userVisible;
-    private boolean[][] flagGrid;
+    private final int [][] gridHidden;
+    private final boolean [][] mineHidden;
+    private final String [][] userVisible;
+    private final boolean[][] flagGrid;
     private int flagAmount;
+    //Constructor class.
     public Board(int gridLen, int amountBomb){
         this.gridLen = gridLen;
         this.amountBomb = amountBomb;
@@ -29,6 +30,7 @@ public class Board {
 //        return userVisible;
 //    }
     public int boardSetUp() {
+        //Initialising each grid we will use for Minesweeper.
         for (int i = 0; i < gridLen; i++) {
             for (int j = 0; j<gridLen; j++){
                 gridHidden[i][j] = 0;
@@ -57,12 +59,15 @@ public class Board {
         }
     }
     public void bombSetup(int firstY,int firstX){
+        //Here we will set the bombs up in the grid after the user has input their first move.
+        //This makes sure that the first move cannot lose the game instantly.
         Random random = new Random();
         int yRand;
         int xRand;
         userVisible[firstY-1][firstX-1] = "0";
         firY=firstY-1;
         firX=firstX-1;
+        //An element in the 2d array mineHidden holds a true value if there is a bomb on that coordinate.
         for (int i =0;i<amountBomb;i++){
             do {
                 yRand = random.nextInt(gridLen)+1;
@@ -83,7 +88,8 @@ public class Board {
 //            }
 //            System.out.println();
 //        }
-        //System.out.println();
+//        System.out.println();
+        //Here we are determining adjacent bombs for each coordinate.
         for (int i=0;i<gridLen;i++){
             for (int j=0;j<gridLen;j++){
                 int count = 0;
@@ -110,6 +116,7 @@ public class Board {
     }
     public void boardPrint(){
         //System.out.print(" |");
+        //Printing the visible board for the user.
         String reset = "\u001B[0m";
         String boldGreen = "\033[1;32m";
         String red = "\033[0;31m";
@@ -117,7 +124,6 @@ public class Board {
         for (int i = 0; i < gridLen-1;i++) {
             System.out.print(boldGreen+(i + 2) + "|"+reset);}
         System.out.println();
-
         for (int i = 0; i < gridLen;i++) {
             System.out.print(boldGreen+"|"+ (i + 1) + "|"+reset);
             for (int j=0;j<gridLen;j++){
@@ -147,6 +153,7 @@ public class Board {
 //            }
 //            System.out.println();
 //        }
+        //Checking the validity of a move as well as if they have hit a bomb on this turn and lost.
         if (moveChoice == 1) {
             if(flagGrid[yCoord-1][xCoord-1]){
                 System.out.println("You can't reveal a tile where a flag is! ");
@@ -170,6 +177,7 @@ public class Board {
         }
     }
     public int winGame(){
+        //Checking if the user has won the game.
         int xChar = 0;
         for (int i = 0; i < gridLen; i++) {
             for (int j = 0; j < gridLen; j++) {
@@ -187,18 +195,25 @@ public class Board {
     public void revealAdjacent(int yCoord,int xCoord){
         Stack<int[]> stack = new Stack<>();
         stack.push(new int[] {yCoord,xCoord});
+        //While the stack is not empty.
         while(!stack.isEmpty()){
+            //Pop the coordinates on top of the stack.
             int[] coords = stack.pop();
             int yVal = coords[0];
             int xVal = coords[1];
+            //Check the coordinates are not the first input from the user, and that they are within the allowed grid.
             if(yVal==firY&&xVal==firX) {
+                //Skip here also if the position has already been revealed.
             }else if (yVal<0||yVal>=gridLen||xVal<0||xVal>=gridLen||userVisible[yVal][xVal] == "0"){
                 continue;}
+            //If the revealed tile is a 0 tile, we will show that on the user grid.
             try {
             if (gridHidden[yVal][xVal] == 0) {
                 userVisible[yVal][xVal]= "0";
                 for (int i=0;i<3;i++) {
                     for (int j = 0; j < 3; j++) {
+                        //If the chosen coordinate is safe without a number of adjacent bombs, we push the surrounding
+                        //3x3 tiles around it to the stack.
                             if ((i - 1) == 0 && (j - 1) == 0) {
                             } else {
                                 stack.push(new int[]{yVal + (i - 1), xVal + (j - 1)});
@@ -206,6 +221,7 @@ public class Board {
                     }
                 }
                 } else {
+                //Here we also reveal values of adjacent bombs to a tile.
                 String str = String.valueOf(gridHidden[yVal][xVal]);
                 userVisible[yVal][xVal]=str;
             }

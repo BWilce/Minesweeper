@@ -41,7 +41,7 @@ public class InputCorrector {
         return (int) val;
     }
     static int yN(String q){
-        //method for changing a variable when the user has input 1 into the console when asked. If 2 is entered it doesn't change the value from the original value.
+        //method for changing a variable when the user has input 1 or 2.
         boolean n = true;
         int yesNo=0;
         while(n){
