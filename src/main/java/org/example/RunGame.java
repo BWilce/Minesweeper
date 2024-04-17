@@ -66,6 +66,7 @@ public class RunGame {
         int firstY = coordChecker(firstOfY);
         board.bombSetup(firstY,firstX);
         board.revealAdjacent((firstY-1),(firstX-1));
+        int n =0;
     }
     public int coordChecker(String q){
         boolean n =true;
