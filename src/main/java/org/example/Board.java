@@ -170,7 +170,7 @@ public class Board {
                 userVisible[yCoord - 1][xCoord - 1] = str;
                 revealAdjacent((yCoord - 1), (xCoord - 1));
                 return 2;
-                //asfdsdg
+                //asfdsdgqwdf
             }
         } else {
             placeFlag(yCoord, xCoord);
